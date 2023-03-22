@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Магазин открыток | Каталог</title>
+  <link rel="icon" type="image/vnd.microsoft.icon" href="../static/favicon.ico"
+        th:href="@{/favicon.ico}"/>
+  <link href="../static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+
+<div class="container">
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <a href="index.html" th:href="@{~/index.html}"
+       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+      <img src="../static/images/logo.png" alt="Logo" th:src="@{/images/logo.png}">
+    </a>
+    <ul class="nav nav-pills">
+      <li class="nav-item"><a href="index.html" class="nav-link text-muted"
+                              aria-current="page" th:href="@{~/index.html}">Главная</a></li>
+      <li class="nav-item"><a href="product-catalog.html" class="nav-link text-muted"
+                              th:href="@{~/product-details/product-catalog.html}">Каталог</a></li>
+      <li class="nav-item"><a href="product-add.html" class="nav-link text-muted"
+                              th:href="@{~/product-details/add-postcard}">Добавить открытку</a></li>
+    </ul>
+  </header>
+</div>
+
+<main>
+
+  <section class="container">
+    <form>
+      <div class="row">
+        <div class="col-sm">
+          <div class="form-group">
+            <label for="vendorCodeId">Артикул</label>
+            <input type="text" class="form-control" id="vendorCodeId" placeholder="Введите артикут"
+                   th:field="*{vendorCode}">
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="form-group">
+            <label for="nameId">Имя</label>
+            <input type="text" class="form-control" id="nameId" placeholder="Введите имя"
+                   th:field="*{name}">
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="form-group">
+            <label for="authorId">Автор</label>
+            <input type="text" class="form-control" id="authorId" placeholder="Введите автора"
+                   th:field="*{author}">
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="form-group">
+            <label for="brandeId">Бренд</label>
+            <input type="text" class="form-control" id="brandeId" placeholder="Введите бренд"
+                   th:field="*{brande}">
+          </div>
+        </div>
+      </div>
+      <div class="row h1 justify-content-end">
+        <div class="col-sm-3">
+          <button type="submit" class="btn btn-outline-secondary">Применить фильтр</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" th:remove="all-but-first">
+        <div class="col" th:each="prod : ${prods}">
+          <div class="card shadow-sm">
+            <img src="../static/images/holiday.jpg" alt="фото"
+                 th:src="@{'product-details/image/' + ${prod.image}}">
+            <div class="card-body">
+              <p class="card-text" th:text="${prod.name}">Корзинка с яйцами</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="product-details.html" th:href="'product-details/' + ${prod.id}">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary" value="ld">Инф.
+                    </button>
+                  </a>
+                  <a href="#">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Кор.</button>
+                  </a>
+                </div>
+                <small class="text-muted">17 р.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-muted">© 2023 Магазин открыток.</p>
+    <a href="index.html"
+       class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+      <img src="../static/images/logo.png" alt="Logo" th:src="@{/images/logo.png}">
+    </a>
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="index.html" class="nav-link px-2 text-muted"
+                              th:href="@{~/index.html}">Главная</a></li>
+      <li class="nav-item"><a href="product-catalog.html" class="nav-link px-2 text-muted"
+                              th:href="@{~/product-details/product-catalog.html}">Каталог</a></li>
+    </ul>
+  </footer>
+</div>
+
+<script src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

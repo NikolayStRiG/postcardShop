@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Магазин открыток | Добавить продукт</title>
+  <link rel="icon" type="image/vnd.microsoft.icon" href="../static/favicon.ico" th:href="@{/favicon.ico}"/>
+  <link href="../static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+
+<div class="container">
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <a href="index.html" th:href="@{~/index.html}"
+       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+      <img src="../static/images/logo.png" alt="Logo" th:src="@{/images/logo.png}">
+    </a>
+    <ul class="nav nav-pills">
+      <li class="nav-item"><a href="index.html" class="nav-link text-muted"
+                              aria-current="page" th:href="@{~/index.html}">Главная</a></li>
+      <li class="nav-item"><a href="product-catalog.html" class="nav-link text-muted" th:href="@{~/product-details/product-catalog.html}">Каталог</a></li>
+      <li class="nav-item"><a href="product-add.html" class="nav-link text-muted" th:href="@{~/product-details/add-postcard}">Добавить открытку</a></li>
+    </ul>
+  </header>
+</div>
+
+<main>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 g-2">
+
+
+
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <form name="postcard" method="post" action="#" enctype="multipart/form-data"
+                    id="addPostcardfForm" th:action="@{/product-details/add-postcard}"
+                    th:object="${product}">
+
+                <div class="form-group">
+                  <label for="vendorCodeId">Артикул</label>
+                  <input type="text" class="form-control" id="vendorCodeId" placeholder="Введите артикут"
+                         th:field="*{vendorCode}">
+                </div>
+
+                <div class="form-group">
+                  <label for="postcardName">Имя</label>
+                  <input type="text" class="form-control" id="postcardName" placeholder="Введите имя"
+                         th:field="*{name}">
+                </div>
+
+                <div class="form-group">
+                  <label for="postcardAuthor">Автор</label>
+                  <input type="text" class="form-control" id="postcardAuthor"
+                         placeholder="Введите имя автороа" th:field="*{author}">
+                </div>
+
+                <div class="form-group">
+                  <label for="postcardBrand">Бренд</label>
+                  <input type="text" class="form-control" id="postcardBrand" placeholder="Введите бренд"
+                         th:field="*{brand}">
+                </div>
+
+                <div class="form-group">
+                  <label for="postcardCategory">Категория</label>
+                  <input type="text" class="form-control" id="postcardCategory"
+                         placeholder="Введите категорию" th:field="*{category}">
+                </div>
+
+                <div class="form-group">
+                  <label for="postcardTags">Теги</label>
+                  <input type="text" class="form-control" id="postcardTags"
+                         placeholder="Введите теги через запятую" th:field="*{tags}">
+                </div>
+
+                <div class="form-group">
+                  <label  for="postcardDescription">Описание</label>
+                  <textarea class="form-control" id="postcardDescription" rows="3"
+                            th:field="*{description}"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="postcardFile">Добавить изображение</label>
+                  <input type="file" class="form-control" id="postcardFile" name="file"
+                         th:field="*{file}">
+                </div>
+
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Добавить открытку</button>
+
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-muted">© 2023 Магазин открыток.</p>
+    <a href="index.html"
+       class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+      <img src="../static/images/logo.png" alt="Logo" th:src="@{/images/logo.png}">
+    </a>
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="index.html" class="nav-link px-2 text-muted" th:href="@{~/index.html}">Главная</a></li>
+      <li class="nav-item"><a href="product-catalog.html" class="nav-link px-2 text-muted" th:href="@{~/product-details/product-catalog.html}">Каталог</a></li>
+    </ul>
+  </footer>
+</div>
+
+<script src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
