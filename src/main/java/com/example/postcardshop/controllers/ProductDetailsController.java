@@ -41,7 +41,13 @@ public class ProductDetailsController {
   @PostMapping("/product-catalog")
   public String productCatalogPost(@ModelAttribute("filter") ProductFilterDto filter, final ModelMap model) {
     var page =
-        postcardService.findPage(filter, PageRequest.of(filter.getPageNumber() - 1, 3, Direction.DESC, "createDate"));
+        postcardService.findPage(
+            filter,
+            PageRequest.of(
+                filter.getPageNumber() == 0 ? 0 : filter.getPageNumber() - 1,
+                3,
+                Direction.DESC,
+                "createDate"));
     var dto = PageDto.of(page);
     model.put("prods", dto.getContent());
     model.addAttribute("filter", filter);
