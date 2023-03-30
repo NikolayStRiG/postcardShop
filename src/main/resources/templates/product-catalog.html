@@ -20,7 +20,7 @@
       <li class="nav-item"><a href="index.html" class="nav-link text-muted"
                               aria-current="page" th:href="@{~/index.html}">Главная</a></li>
       <li class="nav-item"><a href="product-catalog.html" class="nav-link text-muted"
-                              th:href="@{~/product-details/product-catalog.html}">Каталог</a></li>
+                              th:href="@{~/product-details/product-catalog}">Каталог</a></li>
       <li class="nav-item"><a href="product-add.html" class="nav-link text-muted"
                               th:href="@{~/product-details/add-postcard}">Добавить открытку</a></li>
     </ul>
@@ -29,73 +29,95 @@
 
 <main>
 
-  <section class="container">
-    <form>
-      <div class="row">
-        <div class="col-sm">
-          <div class="form-group">
-            <label for="vendorCodeId">Артикул</label>
-            <input type="text" class="form-control" id="vendorCodeId" placeholder="Введите артикут"
-                   th:field="*{vendorCode}">
-          </div>
-        </div>
-        <div class="col-sm">
-          <div class="form-group">
-            <label for="nameId">Имя</label>
-            <input type="text" class="form-control" id="nameId" placeholder="Введите имя"
-                   th:field="*{name}">
-          </div>
-        </div>
-        <div class="col-sm">
-          <div class="form-group">
-            <label for="authorId">Автор</label>
-            <input type="text" class="form-control" id="authorId" placeholder="Введите автора"
-                   th:field="*{author}">
-          </div>
-        </div>
-        <div class="col-sm">
-          <div class="form-group">
-            <label for="brandeId">Бренд</label>
-            <input type="text" class="form-control" id="brandeId" placeholder="Введите бренд"
-                   th:field="*{brande}">
-          </div>
-        </div>
-      </div>
-      <div class="row h1 justify-content-end">
-        <div class="col-sm-3">
-          <button type="submit" class="btn btn-outline-secondary">Применить фильтр</button>
-        </div>
-      </div>
-    </form>
-  </section>
-
   <div class="album py-5 bg-light">
     <div class="container">
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" th:remove="all-but-first">
-        <div class="col" th:each="prod : ${prods}">
-          <div class="card shadow-sm">
-            <img src="../static/images/holiday.jpg" alt="фото"
-                 th:src="@{'product-details/image/' + ${prod.image}}">
-            <div class="card-body">
-              <p class="card-text" th:text="${prod.name}">Корзинка с яйцами</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a href="product-details.html" th:href="'product-details/' + ${prod.id}">
-                    <button type="submit" class="btn btn-sm btn-outline-secondary" value="ld">Инф.
-                    </button>
-                  </a>
-                  <a href="#">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Кор.</button>
-                  </a>
+      <form name="postcard" method="post" action="#" th:action="@{/product-details/product-catalog}"
+            th:object="${filter}">
+        <div class="row">
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="vendorCodeId">Артикул</label>
+              <input type="text" class="form-control" id="vendorCodeId"
+                     placeholder="Введите артикут"
+                     th:field="*{vendorCode}">
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="nameId">Имя</label>
+              <input type="text" class="form-control" id="nameId" placeholder="Введите имя"
+                     th:field="*{name}">
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="authorId">Автор</label>
+              <input type="text" class="form-control" id="authorId" placeholder="Введите автора"
+                     th:field="*{author}">
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              <label for="brandId">Бренд</label>
+              <input type="text" class="form-control" id="brandId" placeholder="Введите бренд"
+                     th:field="*{brand}">
+            </div>
+          </div>
+        </div>
+        <div class="row h1 justify-content-end">
+          <div class="col-sm-3">
+            <button type="submit" class="btn btn-outline-secondary">Применить фильтр</button>
+          </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" th:remove="all-but-first">
+          <div class="col" th:each="prod : ${prods}">
+            <div class="card shadow-sm">
+              <img src="../static/images/holiday.jpg" alt="фото"
+                   th:src="@{'image/' + ${prod.image}}">
+              <div class="card-body">
+                <p class="card-text" th:text="${prod.name}">Корзинка с яйцами</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a href="product-details.html" th:href="@{${prod.id}}">
+                      <button type="submit" class="btn btn-sm btn-outline-secondary" value="ld">Инф.
+                      </button>
+                    </a>
+                    <a href="#">
+                      <button type="button" class="btn btn-sm btn-outline-secondary">Кор.</button>
+                    </a>
+                  </div>
+                  <small class="text-muted">17 р.</small>
                 </div>
-                <small class="text-muted">17 р.</small>
               </div>
             </div>
           </div>
         </div>
 
-      </div>
+        <nav aria-label="Навигации по страницам">
+          <ul class="pagination justify-content-center">
+            <li class="page-item">
+              <input type="submit" class="page-link text-muted" name="pageNumber" value="1"
+                     aria-label="Previous"
+                     th:class="'page-link ' + (${page.first} ? 'text-bg-dark' : 'text-muted')"
+                     th:value="${page.number} == 0 ? ${page.number} + 1 : ${page.number}">
+            </li>
+            <li class="page-item">
+              <input type="submit" class="page-link text-bg-dark" name="pageNumber" value="2"
+                     th:class="'page-link ' + (${page.number} == 0 ? 'text-muted' : 'text-bg-dark')"
+                     th:value="${page.number} == 0 ? ${page.number} + 2 : ${page.number} + 1">
+            </li>
+            <li class="page-item" th:class="'page-item ' + (${page.last} ? 'disabled' : '')">
+              <input type="submit" class="page-link text-muted" name="pageNumber" value="3"
+                     aria-label="Next"
+                     th:value="${page.number} == 0 ? ${page.number} + 3 : ${page.number} + 2">
+            </li>
+          </ul>
+        </nav>
+
+      </form>
+
     </div>
   </div>
 
@@ -112,7 +134,7 @@
       <li class="nav-item"><a href="index.html" class="nav-link px-2 text-muted"
                               th:href="@{~/index.html}">Главная</a></li>
       <li class="nav-item"><a href="product-catalog.html" class="nav-link px-2 text-muted"
-                              th:href="@{~/product-details/product-catalog.html}">Каталог</a></li>
+                              th:href="@{~/product-details/product-catalog}">Каталог</a></li>
     </ul>
   </footer>
 </div>

@@ -5,15 +5,17 @@ import com.example.postcardshop.data.enties.PostcardImage;
 import com.example.postcardshop.data.repositories.PostcardImageRepository;
 import com.example.postcardshop.data.repositories.PostcardRepository;
 import com.example.postcardshop.dto.PostcardDto;
+import com.example.postcardshop.dto.ProductFilterDto;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -62,8 +64,13 @@ public class PostcardServiceImpl implements PostcardService {
   }
 
   @Override
-  public List<Postcard> findAll() {
-    return postcardRepository.findAll();
+  public Page<Postcard> findPage(PageRequest pageRequest) {
+    return postcardRepository.findAll((root,query,criteriaBuilder) -> criteriaBuilder.and(), pageRequest);
+  }
+
+  @Override
+  public Page<Postcard> findPage(ProductFilterDto filter, PageRequest pageRequest) {
+    return postcardRepository.findAll(filter, pageRequest);
   }
 
   public static class ByteArrayResourceCustome extends ByteArrayResource {
