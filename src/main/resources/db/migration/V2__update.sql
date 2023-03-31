@@ -1,0 +1,1 @@
+alter table postcard add column price int;

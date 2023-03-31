@@ -7,9 +7,18 @@ import com.example.postcardshop.data.repositories.PostcardRepository;
 import com.example.postcardshop.dto.PostcardDto;
 import com.example.postcardshop.dto.ProductFilterDto;
 import jakarta.transaction.Transactional;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.Iterator;
 import java.util.Optional;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
@@ -44,6 +53,7 @@ public class PostcardServiceImpl implements PostcardService {
     postcard.setCreateDate(ZonedDateTime.now());
     postcard.setTags(dto.getTags());
     postcard.setVendorCode(dto.getVendorCode());
+    postcard.setPrice(dto.getPrice());
     postcard = postcardRepository.save(postcard);
     log.info("Save new postcard with id {}", postcard.getId());
     return postcard;
@@ -54,8 +64,45 @@ public class PostcardServiceImpl implements PostcardService {
     return imageRepository
         .findById(id)
         .map(
-            postcardImage ->
-                new ByteArrayResourceCustome(postcardImage.getFile(), postcardImage.getName()));
+            postcardImage -> {
+              try {
+                if (postcardImage.getFile().length > 512000) {
+                  return compression(postcardImage, 0.1f);
+                } else if (postcardImage.getFile().length > 204800) {
+                  return compression(postcardImage, 0.3f);
+                } else if (postcardImage.getFile().length > 102400) {
+                  return compression(postcardImage, 0.5f);
+                } else {
+                  return new ByteArrayResourceCustome(
+                      postcardImage.getFile(), postcardImage.getName());
+                }
+
+              } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                return new ByteArrayResourceCustome(
+                    postcardImage.getFile(), postcardImage.getName());
+              }
+            });
+  }
+
+  private ByteArrayResourceCustome compression(PostcardImage postcardImage, float quality) throws IOException {
+    BufferedImage image = ImageIO.read(new ByteArrayInputStream(postcardImage.getFile()));
+
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+    Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+    ImageWriter writer = writers.next();
+
+    ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+    writer.setOutput(ios);
+
+    ImageWriteParam param = writer.getDefaultWriteParam();
+
+    param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+    param.setCompressionQuality(quality);
+    writer.write(null, new IIOImage(image, null, null), param);
+    writer.dispose();
+    return new ByteArrayResourceCustome(os.toByteArray(), postcardImage.getName());
   }
 
   @Override
@@ -65,7 +112,8 @@ public class PostcardServiceImpl implements PostcardService {
 
   @Override
   public Page<Postcard> findPage(PageRequest pageRequest) {
-    return postcardRepository.findAll((root,query,criteriaBuilder) -> criteriaBuilder.and(), pageRequest);
+    return postcardRepository.findAll(
+        (root, query, criteriaBuilder) -> criteriaBuilder.and(), pageRequest);
   }
 
   @Override

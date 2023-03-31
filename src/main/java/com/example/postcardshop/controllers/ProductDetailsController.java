@@ -30,7 +30,7 @@ public class ProductDetailsController {
   @GetMapping("/product-catalog")
   public String productCatalog(final ModelMap model) {
     var page =
-        postcardService.findPage(PageRequest.of(0, 3, Direction.DESC, "createDate"));
+        postcardService.findPage(PageRequest.of(0, 10, Direction.DESC, "createDate"));
     var dto = PageDto.of(page);
     model.put("prods", dto.getContent());
     model.addAttribute("filter", new ProductFilterDto());
@@ -45,7 +45,7 @@ public class ProductDetailsController {
             filter,
             PageRequest.of(
                 filter.getPageNumber() == 0 ? 0 : filter.getPageNumber() - 1,
-                3,
+                10,
                 Direction.DESC,
                 "createDate"));
     var dto = PageDto.of(page);

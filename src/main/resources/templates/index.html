@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Магазин открыток</title>
-  <link rel="icon" type="image/vnd.microsoft.icon" href="../static/favicon.ico" th:href="@{/favicon.ico}"/>
+  <link rel="icon" type="image/vnd.microsoft.icon" href="../static/favicon.ico"
+        th:href="@{/favicon.ico}"/>
   <link href="../static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </head>
 <body>
 
@@ -18,8 +21,10 @@
     <ul class="nav nav-pills">
       <li class="nav-item"><a href="index.html" class="nav-link text-muted"
                               aria-current="page" th:href="@{~/index.html}">Главная</a></li>
-      <li class="nav-item"><a href="product-catalog.html" class="nav-link text-muted" th:href="@{~/product-details/product-catalog}">Каталог</a></li>
-      <li class="nav-item"><a href="product-add.html" class="nav-link text-muted" th:href="@{~/product-details/add-postcard}">Добавить открытку</a></li>
+      <li class="nav-item"><a href="product-catalog.html" class="nav-link text-muted"
+                              th:href="@{~/product-details/product-catalog}">Каталог</a></li>
+      <li class="nav-item"><a href="product-add.html" class="nav-link text-muted"
+                              th:href="@{~/product-details/add-postcard}">Добавить открытку</a></li>
     </ul>
   </header>
 </div>
@@ -41,20 +46,38 @@
   <div class="album py-5 bg-light">
     <div class="container">
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" th:remove="all-but-first">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3" th:remove="all-but-first">
         <div class="col" th:each="prod : ${prods}">
           <div class="card shadow-sm">
-            <img src="../static/images/holiday.jpg" alt="фото" th:src="@{'product-details/image/' + ${prod.image}}">
+            <img src="../static/images/holiday.jpg" alt="фото"
+                 th:src="@{'product-details/image/' + ${prod.image}}">
             <div class="card-body">
               <p class="card-text" th:text="${prod.name}">Корзинка с яйцами</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="product-details.html" th:href="'product-details/' + ${prod.id}">
-                    <button type="submit" class="btn btn-sm btn-outline-secondary" value="ld">Инф.</button>
+                  <a href="product-details.html" class="btn btn-outline-secondary"
+                     th:href="'product-details/' + ${prod.id}">
+                    <i class="bi bi-info-circle"></i>
                   </a>
-                  <a href="#">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Кор.</button>
+                  <a href="#" class="btn btn-outline-secondary">
+                    <i class="bi bi-cart"></i>
                   </a>
+                </div>
+                <small class="text-muted" th:text="(${prod.price} == null ? '' : ${prod.price} + ' р.')">17 р.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="../static/images/holiday.jpg" alt="фото" th:src="@{/images/holiday.jpg}">
+            <div class="card-body">
+              <p class="card-text">Корзинка с яйцами</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-info-circle"></i></button>
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-cart"></i></button>
                 </div>
                 <small class="text-muted">17 р.</small>
               </div>
@@ -69,10 +92,8 @@
               <p class="card-text">Корзинка с яйцами</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="product-details.html" th:href="'product-details/' + ${prod.id}">
-                    <button type="submit" class="btn btn-sm btn-outline-secondary" value="ld">Инф.</button>
-                  </a>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Кор.</button>
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-info-circle"></i></button>
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-cart"></i></button>
                 </div>
                 <small class="text-muted">17 р.</small>
               </div>
@@ -87,10 +108,56 @@
               <p class="card-text">Корзинка с яйцами</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="product-details.html" th:href="'product-details/' + ${prod.id}">
-                    <button type="submit" class="btn btn-sm btn-outline-secondary" value="ld">Инф.</button>
-                  </a>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Кор.</button>
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-info-circle"></i></button>
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-cart"></i></button>
+                </div>
+                <small class="text-muted">17 р.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="../static/images/holiday.jpg" alt="фото" th:src="@{/images/holiday.jpg}">
+            <div class="card-body">
+              <p class="card-text">Корзинка с яйцами</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-info-circle"></i></button>
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-cart"></i></button>
+                </div>
+                <small class="text-muted">17 р.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="../static/images/holiday.jpg" alt="фото" th:src="@{/images/holiday.jpg}">
+            <div class="card-body">
+              <p class="card-text">Корзинка с яйцами</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-info-circle"></i></button>
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-cart"></i></button>
+                </div>
+                <small class="text-muted">17 р.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="../static/images/holiday.jpg" alt="фото" th:src="@{/images/holiday.jpg}">
+            <div class="card-body">
+              <p class="card-text">Корзинка с яйцами</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-info-circle"></i></button>
+                  <button type="button" class="btn btn-outline-secondary"><i class="bi bi-cart"></i></button>
                 </div>
                 <small class="text-muted">17 р.</small>
               </div>
@@ -112,8 +179,10 @@
       <img src="../static/images/logo.png" alt="Logo" th:src="@{/images/logo.png}">
     </a>
     <ul class="nav col-md-4 justify-content-end">
-      <li class="nav-item"><a href="index.html" class="nav-link px-2 text-muted" th:href="@{~/index.html}">Главная</a></li>
-      <li class="nav-item"><a href="product-catalog.html" class="nav-link px-2 text-muted" th:href="@{~/product-details/product-catalog}">Каталог</a></li>
+      <li class="nav-item"><a href="index.html" class="nav-link px-2 text-muted"
+                              th:href="@{~/index.html}">Главная</a></li>
+      <li class="nav-item"><a href="product-catalog.html" class="nav-link px-2 text-muted"
+                              th:href="@{~/product-details/product-catalog}">Каталог</a></li>
     </ul>
   </footer>
 </div>

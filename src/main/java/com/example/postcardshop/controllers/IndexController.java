@@ -20,7 +20,7 @@ public class IndexController {
   public String index(final ModelMap model) {
 
     List<Postcard> prods =
-        postcardService.findPage(PageRequest.of(0, 6, Direction.DESC, "createDate")).getContent();
+        postcardService.findPage(PageRequest.of(0, 10, Direction.DESC, "createDate")).getContent();
     model.put("prods", prods);
     return "index";
   }

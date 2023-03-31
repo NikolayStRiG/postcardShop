@@ -32,4 +32,6 @@ public class Postcard {
 
   @Column private ZonedDateTime createDate;
 
+  @Column private Integer price;
+
 }

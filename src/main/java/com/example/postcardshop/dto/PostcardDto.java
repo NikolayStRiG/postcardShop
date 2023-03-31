@@ -16,5 +16,6 @@ public class PostcardDto {
   private String description;
   private String category;
   private String tags;
+  private Integer price;
   private MultipartFile file;
 }

@@ -83,6 +83,12 @@
                 </div>
 
                 <div class="form-group">
+                  <label  for="postcardPrice">Цена</label>
+                  <input type="number" class="form-control" id="postcardPrice" rows="3"
+                            th:field="*{price}">
+                </div>
+
+                <div class="form-group">
                   <label for="postcardFile">Добавить изображение</label>
                   <input type="file" class="form-control" id="postcardFile" name="file"
                          th:field="*{file}">
