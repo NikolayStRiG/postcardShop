@@ -1,6 +1,6 @@
 package com.example.postcardshop.dto;
 
-import com.example.postcardshop.data.enties.Postcard;
+import com.example.postcardshop.data.enties.Product;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 @Getter
 @Setter
-public class ProductFilterDto implements Specification<Postcard> {
+public class ProductFilterDto implements Specification<Product> {
 
   private String vendorCode;
   private String name;
@@ -23,7 +23,7 @@ public class ProductFilterDto implements Specification<Postcard> {
 
   @Override
   public Predicate toPredicate(
-      Root<Postcard> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+      Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
     var predicate = builder.and();
 

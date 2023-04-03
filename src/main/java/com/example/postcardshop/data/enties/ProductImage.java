@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class PostcardImage {
+public class ProductImage {
 
   @Id @GeneratedValue private Long id;
   @Column String name;

@@ -1,10 +1,11 @@
 package com.example.postcardshop.services;
 
-import com.example.postcardshop.data.enties.Postcard;
-import com.example.postcardshop.data.enties.PostcardImage;
-import com.example.postcardshop.data.repositories.PostcardImageRepository;
-import com.example.postcardshop.data.repositories.PostcardRepository;
-import com.example.postcardshop.dto.PostcardDto;
+import com.example.postcardshop.data.enties.Product;
+import com.example.postcardshop.data.enties.ProductImage;
+import com.example.postcardshop.data.enties.ProductType;
+import com.example.postcardshop.data.repositories.ProductImageRepository;
+import com.example.postcardshop.data.repositories.ProductRepository;
+import com.example.postcardshop.dto.ProductDto;
 import com.example.postcardshop.dto.ProductFilterDto;
 import jakarta.transaction.Transactional;
 import java.awt.image.BufferedImage;
@@ -30,33 +31,34 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class PostcardServiceImpl implements PostcardService {
+public class ProductServiceImpl implements ProductService {
 
-  private final PostcardRepository postcardRepository;
-  private final PostcardImageRepository imageRepository;
+  private final ProductRepository postcardRepository;
+  private final ProductImageRepository imageRepository;
 
   @Transactional
   @Override
-  public Postcard save(PostcardDto dto) throws IOException {
-    var image = new PostcardImage();
+  public Product save(ProductDto dto) throws IOException {
+    var image = new ProductImage();
     image.setFile(dto.getFile().getBytes());
     image.setName(dto.getFile().getOriginalFilename());
     image = imageRepository.save(image);
 
-    var postcard = new Postcard();
-    postcard.setAuthor(dto.getAuthor());
-    postcard.setBrand(dto.getBrand());
-    postcard.setCategory(dto.getCategory());
-    postcard.setDescription(dto.getDescription());
-    postcard.setImage(image.getId().toString());
-    postcard.setName(dto.getName());
-    postcard.setCreateDate(ZonedDateTime.now());
-    postcard.setTags(dto.getTags());
-    postcard.setVendorCode(dto.getVendorCode());
-    postcard.setPrice(dto.getPrice());
-    postcard = postcardRepository.save(postcard);
-    log.info("Save new postcard with id {}", postcard.getId());
-    return postcard;
+    var product = new Product();
+    product.setAuthor(dto.getAuthor());
+    product.setBrand(dto.getBrand());
+    product.setCategory(dto.getCategory());
+    product.setDescription(dto.getDescription());
+    product.setImage(image.getId().toString());
+    product.setName(dto.getName());
+    product.setCreateDate(ZonedDateTime.now());
+    product.setTags(dto.getTags());
+    product.setVendorCode(dto.getVendorCode());
+    product.setPrice(dto.getPrice());
+    product.setType(ProductType.POSTCARD);
+    product = postcardRepository.save(product);
+    log.info("Save new product with id {}", product.getId());
+    return product;
   }
 
   @Override
@@ -85,7 +87,8 @@ public class PostcardServiceImpl implements PostcardService {
             });
   }
 
-  private ByteArrayResourceCustome compression(PostcardImage postcardImage, float quality) throws IOException {
+  private ByteArrayResourceCustome compression(ProductImage postcardImage, float quality)
+      throws IOException {
     BufferedImage image = ImageIO.read(new ByteArrayInputStream(postcardImage.getFile()));
 
     ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -106,18 +109,18 @@ public class PostcardServiceImpl implements PostcardService {
   }
 
   @Override
-  public Optional<Postcard> findById(Long id) {
+  public Optional<Product> findById(Long id) {
     return postcardRepository.findById(id);
   }
 
   @Override
-  public Page<Postcard> findPage(PageRequest pageRequest) {
+  public Page<Product> findPage(PageRequest pageRequest) {
     return postcardRepository.findAll(
         (root, query, criteriaBuilder) -> criteriaBuilder.and(), pageRequest);
   }
 
   @Override
-  public Page<Postcard> findPage(ProductFilterDto filter, PageRequest pageRequest) {
+  public Page<Product> findPage(ProductFilterDto filter, PageRequest pageRequest) {
     return postcardRepository.findAll(filter, pageRequest);
   }
 
@@ -138,6 +141,16 @@ public class PostcardServiceImpl implements PostcardService {
     @Override
     public String getFilename() {
       return this.name;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+      return super.equals(other);
+    }
+
+    @Override
+    public int hashCode() {
+      return super.hashCode();
     }
   }
 }

@@ -1,9 +1,9 @@
 package com.example.postcardshop.controllers;
 
 import com.example.postcardshop.dto.PageDto;
-import com.example.postcardshop.dto.PostcardDto;
+import com.example.postcardshop.dto.ProductDto;
 import com.example.postcardshop.dto.ProductFilterDto;
-import com.example.postcardshop.services.PostcardService;
+import com.example.postcardshop.services.ProductService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -21,16 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @RequiredArgsConstructor
-@RequestMapping("product-details")
+@RequestMapping("product")
 @Controller
-public class ProductDetailsController {
+public class ProductController {
 
-  private final PostcardService postcardService;
+  public static final String PRODUCT = "product";
+  private final ProductService productService;
 
-  @GetMapping("/product-catalog")
+  @GetMapping("/catalog")
   public String productCatalog(final ModelMap model) {
-    var page =
-        postcardService.findPage(PageRequest.of(0, 10, Direction.DESC, "createDate"));
+    var page = productService.findPage(PageRequest.of(0, 10, Direction.DESC, "createDate"));
     var dto = PageDto.of(page);
     model.put("prods", dto.getContent());
     model.addAttribute("filter", new ProductFilterDto());
@@ -38,10 +38,10 @@ public class ProductDetailsController {
     return "product-catalog";
   }
 
-  @PostMapping("/product-catalog")
+  @PostMapping("/catalog")
   public String productCatalogPost(@ModelAttribute("filter") ProductFilterDto filter, final ModelMap model) {
     var page =
-        postcardService.findPage(
+        productService.findPage(
             filter,
             PageRequest.of(
                 filter.getPageNumber() == 0 ? 0 : filter.getPageNumber() - 1,
@@ -57,28 +57,28 @@ public class ProductDetailsController {
 
   @GetMapping("/{id}")
   public String productDetails(@PathVariable Long id, final ModelMap model) {
-    model.put("product", postcardService.findById(id).get());
+    model.put(PRODUCT, productService.findById(id).get());
     return "product-details";
   }
 
-  @GetMapping("/add-postcard")
+  @GetMapping("/add")
   public String addProductDetailsGet(final ModelMap model) {
-    model.addAttribute("product", new PostcardDto());
+    model.addAttribute(PRODUCT, new ProductDto());
     return "product-add";
   }
 
-  @PostMapping("/add-postcard")
+  @PostMapping("/add")
   public String addProductDetails(
-      @ModelAttribute("product") PostcardDto postcard, final ModelMap model)throws IOException {
-    var result = postcardService.save(postcard);
-    model.put("product", result);
+      @ModelAttribute("product") ProductDto product, final ModelMap model)throws IOException {
+    var result = productService.save(product);
+    model.put(PRODUCT, result);
     return "product-details";
   }
 
   @GetMapping("image/{id}")
   @ResponseBody
   public ResponseEntity<Resource> getFile(@PathVariable Long id) {
-    var file = postcardService.loadAsResource(id).get();
+    var file = productService.loadAsResource(id).get();
     return ResponseEntity.ok()
         .header(
             HttpHeaders.CONTENT_DISPOSITION,

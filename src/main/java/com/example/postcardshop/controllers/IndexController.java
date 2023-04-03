@@ -1,7 +1,7 @@
 package com.example.postcardshop.controllers;
 
-import com.example.postcardshop.data.enties.Postcard;
-import com.example.postcardshop.services.PostcardService;
+import com.example.postcardshop.data.enties.Product;
+import com.example.postcardshop.services.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
 
-  private final PostcardService postcardService;
+  private final ProductService postcardService;
 
   @GetMapping({"/", "index", "index.html", "/home"})
   public String index(final ModelMap model) {
 
-    List<Postcard> prods =
+    List<Product> prods =
         postcardService.findPage(PageRequest.of(0, 10, Direction.DESC, "createDate")).getContent();
     model.put("prods", prods);
     return "index";

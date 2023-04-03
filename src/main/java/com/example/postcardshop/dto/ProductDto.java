@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class PostcardDto {
+public class ProductDto {
 
   private Long id;
   private String vendorCode;
