@@ -26,6 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ProductController {
 
   public static final String PRODUCT = "product";
+  public static final String ROUTE = "route";
+  public static final String INDEX = "index";
+  public static final String PAGE = "page";
+  public static final String FILTER = "filter";
   private final ProductService productService;
 
   @GetMapping("/catalog")
@@ -33,13 +37,15 @@ public class ProductController {
     var page = productService.findPage(PageRequest.of(0, 10, Direction.DESC, "createDate"));
     var dto = PageDto.of(page);
     model.put("prods", dto.getContent());
-    model.addAttribute("filter", new ProductFilterDto());
-    model.addAttribute("page", dto);
-    return "product-catalog";
+    model.addAttribute(FILTER, new ProductFilterDto());
+    model.addAttribute(PAGE, dto);
+    model.put(ROUTE, "catalog");
+    return INDEX;
   }
 
   @PostMapping("/catalog")
-  public String productCatalogPost(@ModelAttribute("filter") ProductFilterDto filter, final ModelMap model) {
+  public String productCatalogPost(
+      @ModelAttribute(FILTER) ProductFilterDto filter, final ModelMap model) {
     var page =
         productService.findPage(
             filter,
@@ -50,29 +56,33 @@ public class ProductController {
                 "createDate"));
     var dto = PageDto.of(page);
     model.put("prods", dto.getContent());
-    model.addAttribute("filter", filter);
-    model.addAttribute("page", dto);
-    return "product-catalog";
+    model.addAttribute(FILTER, filter);
+    model.addAttribute(PAGE, dto);
+    model.put(ROUTE, "catalog");
+    return INDEX;
   }
 
   @GetMapping("/{id}")
   public String productDetails(@PathVariable Long id, final ModelMap model) {
     model.put(PRODUCT, productService.findById(id).get());
-    return "product-details";
+    model.put(ROUTE, "productDetails");
+    return INDEX;
   }
 
   @GetMapping("/add")
   public String addProductDetailsGet(final ModelMap model) {
     model.addAttribute(PRODUCT, new ProductDto());
-    return "product-add";
+    model.put(ROUTE, "productAdd");
+    return INDEX;
   }
 
   @PostMapping("/add")
   public String addProductDetails(
-      @ModelAttribute("product") ProductDto product, final ModelMap model)throws IOException {
+      @ModelAttribute("product") ProductDto product, final ModelMap model) throws IOException {
     var result = productService.save(product);
     model.put(PRODUCT, result);
-    return "product-details";
+    model.put(ROUTE, "productDetails");
+    return INDEX;
   }
 
   @GetMapping("image/{id}")
@@ -81,8 +91,7 @@ public class ProductController {
     var file = productService.loadAsResource(id).get();
     return ResponseEntity.ok()
         .header(
-            HttpHeaders.CONTENT_DISPOSITION,
-            "attachment; filename=\"" + file.getFilename() + "\"")
+            HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
         .body(file);
   }
 }

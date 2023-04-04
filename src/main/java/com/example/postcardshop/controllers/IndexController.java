@@ -22,6 +22,7 @@ public class IndexController {
     List<Product> prods =
         postcardService.findPage(PageRequest.of(0, 10, Direction.DESC, "createDate")).getContent();
     model.put("prods", prods);
+    model.put("route", "homePage");
     return "index";
   }
 }

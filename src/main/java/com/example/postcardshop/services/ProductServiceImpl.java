@@ -22,6 +22,7 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -46,7 +47,6 @@ public class ProductServiceImpl implements ProductService {
 
     var product = new Product();
     product.setAuthor(dto.getAuthor());
-    product.setBrand(dto.getBrand());
     product.setCategory(dto.getCategory());
     product.setDescription(dto.getDescription());
     product.setImage(image.getId().toString());
@@ -61,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
     return product;
   }
 
+  @Cacheable({"ProductServiceImpl_loadAsResource"})
   @Override
   public Optional<Resource> loadAsResource(Long id) {
     return imageRepository

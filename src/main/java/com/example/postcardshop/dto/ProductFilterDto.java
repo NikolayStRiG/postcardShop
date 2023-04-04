@@ -16,7 +16,6 @@ public class ProductFilterDto implements Specification<Product> {
   private String vendorCode;
   private String name;
   private String author;
-  private String brand;
   private String category;
   private String tags;
   private int pageNumber;
@@ -39,8 +38,12 @@ public class ProductFilterDto implements Specification<Product> {
       predicate = builder.and(predicate, builder.like(root.get("author"), "%" + author + "%"));
     }
 
-    if (brand != null && !brand.isEmpty()) {
-      predicate = builder.and(predicate, builder.like(root.get("brand"), "%" + brand + "%"));
+    if (category != null && !category.isEmpty()) {
+      predicate = builder.and(predicate, builder.like(root.get("category"), "%" + category + "%"));
+    }
+
+    if (tags != null && !tags.isEmpty()) {
+      predicate = builder.and(predicate, builder.like(root.get("tags"), "%" + tags + "%"));
     }
 
     return predicate;

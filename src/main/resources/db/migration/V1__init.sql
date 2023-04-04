@@ -9,7 +9,6 @@ create table product
     name        varchar(255) not null,
     type        varchar(50) not null,
     author      varchar(255),
-    brand       varchar(255),
     description varchar(255),
     image       varchar(255),
     category    varchar(255),

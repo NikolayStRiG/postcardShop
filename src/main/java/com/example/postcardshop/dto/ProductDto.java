@@ -12,7 +12,6 @@ public class ProductDto {
   private String vendorCode;
   private String name;
   private String author;
-  private String brand;
   private String description;
   private String category;
   private String tags;

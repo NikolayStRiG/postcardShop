@@ -28,8 +28,6 @@ public class Product {
 
   @Column private String author;
 
-  @Column private String brand;
-
   @Column private String description;
 
   @Column private String image;
