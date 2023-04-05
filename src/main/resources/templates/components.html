@@ -49,7 +49,8 @@
         <h1 class="fw-light">Магазин открыток</h1>
         <p class="lead text-muted">Открытки всем!</p>
         <p>
-          <a href="#catalogId" th:href="@{~/product/catalog}" class="btn btn-secondary my-2">Смотреть все</a>
+          <a href="#catalogId" th:href="@{~/product/catalog}" class="btn btn-secondary my-2">Смотреть
+            все</a>
         </p>
       </div>
     </div>
@@ -59,6 +60,8 @@
     <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3"
            th:remove="all-but-first">
+        <!--/*@thymesVar id="product" type="com.example.postcardshop.data.enties.Product"*/-->
+        <!--/*@thymesVar id="prods" type="java.util.List"*/-->
         <div class="col" th:each="product : ${prods}">
           <div class="card shadow-sm">
             <img src="../static/images/holiday.jpg" alt="фото"
@@ -92,6 +95,7 @@
   <div class="album py-5 bg-light">
     <div class="container">
 
+      <!--/*@thymesVar id="filter" type="com.example.postcardshop.dto.ProductFilterDto"*/-->
       <form name="postcard" method="post" action="#" th:action="@{/product/catalog}"
             th:object="${filter}">
         <div class="row">
@@ -120,7 +124,8 @@
           <div class="col-sm">
             <div class="form-group">
               <label for="categoryId">Категория</label>
-              <input type="text" class="form-control" id="categoryId" placeholder="Введите категорию"
+              <input type="text" class="form-control" id="categoryId"
+                     placeholder="Введите категорию"
                      th:field="*{category}">
             </div>
           </div>
@@ -131,7 +136,9 @@
           </div>
         </div>
 
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3" th:remove="all-but-first">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3"
+             th:remove="all-but-first">
+          <!--/*@thymesVar id="prods" type="java.util.List"*/-->
           <div class="col" th:each="prod : ${prods}">
             <div class="card shadow-sm">
               <img src="../static/images/holiday.jpg" alt="фото"
@@ -148,7 +155,9 @@
                       <i class="bi bi-cart"></i>
                     </a>
                   </div>
-                  <small class="text-muted" th:text="(${prod.price} == null ? '' : ${prod.price} + ' р.')">17 р.</small>
+                  <small class="text-muted"
+                         th:text="(${prod.price} == null ? '' : ${prod.price} + ' р.')">17
+                    р.</small>
                 </div>
               </div>
             </div>
@@ -156,14 +165,17 @@
         </div>
 
         <nav aria-label="Навигации по страницам">
+          <!--/*@thymesVar id="page" type="com.example.postcardshop.dto.PageDto"*/-->
           <ul class="pagination justify-content-center">
             <li class="page-item">
+
               <input type="submit" class="page-link text-muted" name="pageNumber" value="1"
                      aria-label="Previous"
                      th:class="'page-link ' + (${page.first} ? 'text-bg-dark' : 'text-muted')"
                      th:value="${page.number} == 0 ? ${page.number} + 1 : ${page.number}">
             </li>
-            <li class="page-item" th:class="'page-item ' + (${page.totalPages} <= 1 ? 'disabled' : '')">
+            <li class="page-item"
+                th:class="'page-item ' + (${page.totalPages} <= 1 ? 'disabled' : '')">
               <input type="submit" class="page-link text-bg-dark" name="pageNumber" value="2"
                      th:class="'page-link ' + (${page.number} == 0 ? 'text-muted' : 'text-bg-dark')"
                      th:value="${page.number} == 0 ? ${page.number} + 2 : ${page.number} + 1">
@@ -185,7 +197,6 @@
 
 <div class="border-bottom border-top" id="productAddId">Добавить продукт</div>
 <div th:fragment="productAdd">
-
   <div class="album py-5 bg-light">
     <div class="container">
 
@@ -194,19 +205,23 @@
         <div class="col">
           <div class="card shadow-sm">
             <div class="card-body">
-              <form name="postcard" method="post" action="#productDetailsId" enctype="multipart/form-data"
+              <!--/*@thymesVar id="product" type="com.example.postcardshop.dto.ProductDto"*/-->
+              <form name="postcard" method="post" action="#productDetailsId"
+                    enctype="multipart/form-data"
                     id="addPostcardfForm" th:action="@{/product/add}"
                     th:object="${product}">
 
                 <div class="form-group">
                   <label for="vendorCodeId">Артикул</label>
-                  <input type="text" class="form-control" id="vendorCodeId" placeholder="Введите артикул"
+                  <input type="text" class="form-control" id="vendorCodeId"
+                         placeholder="Введите артикул"
                          th:field="*{vendorCode}">
                 </div>
 
                 <div class="form-group">
                   <label for="postcardName">Название</label>
-                  <input type="text" class="form-control" id="postcardName" placeholder="Введите название"
+                  <input type="text" class="form-control" id="postcardName"
+                         placeholder="Введите название"
                          th:field="*{name}">
                 </div>
 
@@ -229,13 +244,13 @@
                 </div>
 
                 <div class="form-group">
-                  <label  for="postcardDescription">Описание</label>
+                  <label for="postcardDescription">Описание</label>
                   <textarea class="form-control" id="postcardDescription" rows="3"
                             th:field="*{description}"></textarea>
                 </div>
 
                 <div class="form-group">
-                  <label  for="postcardPrice">Цена</label>
+                  <label for="postcardPrice">Цена</label>
                   <input type="number" class="form-control" id="postcardPrice" rows="3"
                          th:field="*{price}">
                 </div>
@@ -246,7 +261,8 @@
                          th:field="*{file}">
                 </div>
 
-                <button type="submit" class="btn btn-sm btn-outline-secondary">Добавить открытку</button>
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Добавить открытку
+                </button>
 
               </form>
             </div>
@@ -262,6 +278,7 @@
 
 <div class="border-bottom border-top" id="productDetailsId">Информация о продукте</div>
 <div th:fragment="productDetails">
+  <!--/*@thymesVar id="product" type="com.example.postcardshop.data.enties.Product"*/-->
 
   <div class="album py-5 bg-light">
     <div class="container">
@@ -270,7 +287,8 @@
 
         <div class="col">
           <div class="card shadow-sm">
-            <img src="../static/images/holiday.jpg" alt="фото" th:src="@{'image/' + ${product.image} + '/full'}">
+            <img src="../static/images/holiday.jpg" alt="фото"
+                 th:src="@{'image/' + ${product.image} + '/full'}">
           </div>
         </div>
 
@@ -280,13 +298,18 @@
               <p class="card-text" th:text="${product.name}">Корзинка с яйцами</p>
               <p class="card-text" th:text="'Артикул: ' + ${product.vendorCode}">Артикул: 12212</p>
               <p class="card-text" th:text="'Автор: ' + ${product.author}">Автор: Петров П.П.</p>
+              <p class="card-text" th:text="'Категория: ' + ${product.category}">Категория:
+                Пасха</p>
+              <p class="card-text" th:text="'Описание: ' + ${product.description}">Описание:
+                Описание</p>
               <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
+                <div class="btn-group-lg">
                   <a href="#" class="btn btn-outline-secondary">
                     <i class="bi bi-cart"></i>
                   </a>
                 </div>
-                <small class="text-muted" th:text="(${product.price} == null ? '' : ${product.price} + ' р.')">17 р.</small>
+                <h4 class="text-muted"
+                    th:text="(${product.price} == null ? '' : ${product.price} + ' р.')">17 р.</h4>
               </div>
             </div>
           </div>
@@ -316,7 +339,8 @@
 </div>
 
 
-<script src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}" th:fragment="script"></script>
+<script src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"
+        th:fragment="script"></script>
 
 </body>
 </html>
