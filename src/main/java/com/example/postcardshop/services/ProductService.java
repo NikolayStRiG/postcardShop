@@ -15,6 +15,8 @@ public interface ProductService {
 
   Optional<Resource> loadAsResource(Long id);
 
+  Optional<Resource> loadAsResourceFull(Long id);
+
   Optional<Product> findById(Long id);
 
   Page<Product> findPage(PageRequest pageRequest);

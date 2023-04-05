@@ -8,18 +8,14 @@ import com.example.postcardshop.data.repositories.ProductRepository;
 import com.example.postcardshop.dto.ProductDto;
 import com.example.postcardshop.dto.ProductFilterDto;
 import jakarta.transaction.Transactional;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.Iterator;
 import java.util.Optional;
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -34,6 +30,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+  private static final int IMG_WIDTH_1000 = 1000;
+  private static final int IMG_HEIGHT_668 = 668;
+  private static final int IMG_WIDTH_500 = 500;
+  private static final int IMG_HEIGHT_334 = 334;
+
   private final ProductRepository postcardRepository;
   private final ProductImageRepository imageRepository;
 
@@ -41,7 +42,9 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public Product save(ProductDto dto) throws IOException {
     var image = new ProductImage();
-    image.setFile(dto.getFile().getBytes());
+    var file = dto.getFile().getBytes();
+    var img = resizeFile(file, IMG_WIDTH_1000, IMG_HEIGHT_668);
+    image.setFile(img);
     image.setName(dto.getFile().getOriginalFilename());
     image = imageRepository.save(image);
 
@@ -69,17 +72,13 @@ public class ProductServiceImpl implements ProductService {
         .map(
             postcardImage -> {
               try {
-                if (postcardImage.getFile().length > 512000) {
-                  return compression(postcardImage, 0.1f);
-                } else if (postcardImage.getFile().length > 204800) {
-                  return compression(postcardImage, 0.3f);
-                } else if (postcardImage.getFile().length > 102400) {
-                  return compression(postcardImage, 0.5f);
+                if (postcardImage.getFile().length > 32000) {
+                  var result = resizeFile(postcardImage.getFile(), IMG_WIDTH_500, IMG_HEIGHT_334);
+                  return new ByteArrayResourceCustome(result, postcardImage.getName());
                 } else {
                   return new ByteArrayResourceCustome(
                       postcardImage.getFile(), postcardImage.getName());
                 }
-
               } catch (IOException e) {
                 log.error(e.getMessage(), e);
                 return new ByteArrayResourceCustome(
@@ -88,25 +87,29 @@ public class ProductServiceImpl implements ProductService {
             });
   }
 
-  private ByteArrayResourceCustome compression(ProductImage postcardImage, float quality)
-      throws IOException {
-    BufferedImage image = ImageIO.read(new ByteArrayInputStream(postcardImage.getFile()));
+  @Override
+  public Optional<Resource> loadAsResourceFull(Long id) {
+    return imageRepository
+        .findById(id)
+        .map(img -> new ByteArrayResourceCustome(img.getFile(), img.getName()));
+  }
 
+  public static byte[] resizeFile(byte[] fileToRead, int width, int height) throws IOException {
+    BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(fileToRead));
+    int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+    var image = resizeImage(originalImage, width, height, type);
     ByteArrayOutputStream os = new ByteArrayOutputStream();
+    ImageIO.write(image, "jpg", os);
+    return os.toByteArray();
+  }
 
-    Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
-    ImageWriter writer = writers.next();
-
-    ImageOutputStream ios = ImageIO.createImageOutputStream(os);
-    writer.setOutput(ios);
-
-    ImageWriteParam param = writer.getDefaultWriteParam();
-
-    param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-    param.setCompressionQuality(quality);
-    writer.write(null, new IIOImage(image, null, null), param);
-    writer.dispose();
-    return new ByteArrayResourceCustome(os.toByteArray(), postcardImage.getName());
+  private static BufferedImage resizeImage(
+      BufferedImage originalImage, int width, int height, int type) {
+    BufferedImage resizedImage = new BufferedImage(width, height, type);
+    Graphics2D g = resizedImage.createGraphics();
+    g.drawImage(originalImage, 0, 0, width, height, null);
+    g.dispose();
+    return resizedImage;
   }
 
   @Override
